@@ -5,11 +5,11 @@ namespace FarmInfo.Services.CowService
 {
     public interface ICowService
     {
-        Task<Response<List<GetCowDto>>> GetAllCows();
-        Task<Response<GetCowDto>> GetCowById(int id);
-        Task<Response<List<GetCowDto>>> AddCow(AddCowDto newCow);
-        Task<Response<GetCowDto>> UpdateCow(UpdateCowDto updatedCow);
-        Task<Response<List<GetCowDto>>> DeleteCow(int id);
+        Task<ServiceResponse<List<GetCowDto>>> GetAllCows();
+        Task<ServiceResponse<GetCowDto>> GetCowById(int id);
+        Task<ServiceResponse<List<GetCowDto>>> AddCow(AddCowDto newCow);
+        Task<ServiceResponse<GetCowDto>> UpdateCow(UpdateCowDto updatedCow);
+        Task<ServiceResponse<List<GetCowDto>>> DeleteCow(int id);
 
     }
 }

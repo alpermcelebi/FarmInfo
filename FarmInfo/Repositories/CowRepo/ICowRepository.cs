@@ -12,9 +12,14 @@ namespace FarmInfo.Repositories.CowRepo
         Task UpdateCow(Cow cow);
 
         Task<List<HealthRecord>> GetHealthRecords(int cowId);
-        Task<HealthRecord> AddHealthRecord(HealthRecord newHealthRecord, int cowId);
-        Task<HealthRecord> UpdateHealthRecord(HealthRecord updatedHealthRecord, int cowId);
+        Task AddHealthRecord(HealthRecord newHealthRecord, int cowId);
+        Task UpdateHealthRecord(HealthRecord updatedHealthRecord, int cowId);
         Task<List<HealthRecord>> DeleteHealthRecord(HealthRecord healthRecord, int cowId);
-        
+
+        Task<List<MilkProductionRecord>> GetProductionRecords(int cowId);
+        Task AddProductionRecord(MilkProductionRecord productionRecord, int cowId);
+        Task UpdateProductionRecord(MilkProductionRecord updatedProductionRecord, int cowId);
+        Task<List<MilkProductionRecord>> DeleteProductionRecord(MilkProductionRecord productionRecord, int cowId);
+
     }
 }

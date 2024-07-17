@@ -1,6 +1,7 @@
 ﻿using FarmInfo.Models;
 using FarmInfo.Repositories.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -112,6 +113,56 @@ namespace FarmInfo.Repositories.CowRepo
                 }
             }
             return cow.HealthRecords;
+        }
+
+        
+        public async Task<List<MilkProductionRecord>> GetProductionRecords(int cowId)
+        {
+            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            var healthRecords = cow!.HealthRecords;
+            return cow?.MilkProductionRecords ?? new List<MilkProductionRecord>();
+        }
+
+        public async Task AddProductionRecord(MilkProductionRecord productionRecord, int cowId)
+        {
+            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            if (cow != null)
+            {
+                cow.MilkProductionRecords!.Add(productionRecord);
+                await _context.MilkProductionRecords.AddAsync(productionRecord);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateProductionRecord(MilkProductionRecord updatedProductionRecord, int cowId)
+        {
+            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            if (cow != null)
+            {
+                var productionRecord = cow.MilkProductionRecords!.FirstOrDefault(hr => hr.Id == updatedProductionRecord.Id);
+                if (productionRecord != null)
+                {
+                    productionRecord.Quantity = updatedProductionRecord.Quantity;
+                    productionRecord.Date = updatedProductionRecord.Date;
+
+                    _context.MilkProductionRecords.Update(productionRecord);
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task<List<MilkProductionRecord>> DeleteProductionRecord(MilkProductionRecord productionRecord, int cowId)
+        {
+            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            if (cow != null)
+            {
+                if (productionRecord != null)
+                {
+                    cow.MilkProductionRecords!.Remove(productionRecord);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return cow.MilkProductionRecords;
         }
     }
 }

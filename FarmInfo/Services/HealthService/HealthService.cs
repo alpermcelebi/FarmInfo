@@ -15,9 +15,9 @@ namespace FarmInfo.Services.HealthService
             _repository = repository;
             _mapper = mapper;
         }
-        public async Task<Response<List<GetHealthRecordDto>>> AddHealthRecord(AddHealthRecordDto newHealthRecord, int cowId)
+        public async Task<ServiceResponse<List<GetHealthRecordDto>>> AddHealthRecord(AddHealthRecordDto newHealthRecord, int cowId)
         {
-            var serviceResponse = new Response<List<GetHealthRecordDto>>();
+            var serviceResponse = new ServiceResponse<List<GetHealthRecordDto>>();
             try
             {
                 var cow = await _repository.GetCowById(cowId) ?? throw new Exception($"Cow with ID '{cowId}' not found.");
@@ -40,9 +40,9 @@ namespace FarmInfo.Services.HealthService
         }
 
 
-        public async Task<Response<List<GetHealthRecordDto>>> DeleteHealthRecord(GetHealthRecordDto healthRecord, int cowId)
+        public async Task<ServiceResponse<List<GetHealthRecordDto>>> DeleteHealthRecord(GetHealthRecordDto healthRecord, int cowId)
         {
-            var serviceResponse = new Response<List<GetHealthRecordDto>>();
+            var serviceResponse = new ServiceResponse<List<GetHealthRecordDto>>();
             try
             {
                 var cow = await _repository.GetCowById(cowId) ?? throw new Exception($"Cow with ID '{cowId}' not found.");
@@ -62,17 +62,17 @@ namespace FarmInfo.Services.HealthService
             return serviceResponse;
         }
 
-        public async Task<Response<List<GetHealthRecordDto>>> GetHealthRecords(int cowId)
+        public async Task<ServiceResponse<List<GetHealthRecordDto>>> GetHealthRecords(int cowId)
         {
-            var serviceResponse = new Response<List<GetHealthRecordDto>>();
+            var serviceResponse = new ServiceResponse<List<GetHealthRecordDto>>();
             var healthRecords = await _repository.GetHealthRecords(cowId);
             serviceResponse.Value = healthRecords.Select(c => _mapper.Map<GetHealthRecordDto>(c)).ToList();
             return serviceResponse;
         }
 
-        public async Task<Response<List<GetHealthRecordDto>>> UpdateHealthRecord(UpdateHealthRecordDto updatedHealthRecord, int cowId)
+        public async Task<ServiceResponse<List<GetHealthRecordDto>>> UpdateHealthRecord(UpdateHealthRecordDto updatedHealthRecord, int cowId)
         {
-            var serviceResponse = new Response<List<GetHealthRecordDto>>();
+            var serviceResponse = new ServiceResponse<List<GetHealthRecordDto>>();
             try
             {
                 var cow = await _repository.GetCowById(cowId) ?? throw new Exception($"Cow with ID '{cowId}' not found.");

@@ -15,9 +15,9 @@ namespace FarmInfo.Services.CowService
             _repository = repository;
             _mapper = mapper;
         }
-        public async Task<Response<List<GetCowDto>>> AddCow(AddCowDto newCow)
+        public async Task<ServiceResponse<List<GetCowDto>>> AddCow(AddCowDto newCow)
         {
-            var serviceResponse = new Response<List<GetCowDto>>();
+            var serviceResponse = new ServiceResponse<List<GetCowDto>>();
             var cow = _mapper.Map<Cow>(newCow);
 
             await _repository.AddCow(cow);
@@ -27,9 +27,9 @@ namespace FarmInfo.Services.CowService
 
         }
 
-        public async Task<Response<List<GetCowDto>>> DeleteCow(int id)
+        public async Task<ServiceResponse<List<GetCowDto>>> DeleteCow(int id)
         {
-            var serviceResponse = new Response<List<GetCowDto>>();
+            var serviceResponse = new ServiceResponse<List<GetCowDto>>();
             try
             {
                 var cow = await _repository.GetCowById(id);
@@ -49,25 +49,25 @@ namespace FarmInfo.Services.CowService
             return serviceResponse;
         }
 
-        public async Task<Response<List<GetCowDto>>> GetAllCows()
+        public async Task<ServiceResponse<List<GetCowDto>>> GetAllCows()
         {
-            var serviceResponse = new Response<List<GetCowDto>>();
+            var serviceResponse = new ServiceResponse<List<GetCowDto>>();
             var cows = await _repository.GetAllCows();
             serviceResponse.Value = cows.Select(c => _mapper.Map<GetCowDto>(c)).ToList();
             return serviceResponse;
         }
 
-        public async Task<Response<GetCowDto>> GetCowById(int id)
+        public async Task<ServiceResponse<GetCowDto>> GetCowById(int id)
         {
-            var serviceResponse = new Response<GetCowDto>();    
+            var serviceResponse = new ServiceResponse<GetCowDto>();    
             var cow = await _repository.GetCowById(id);
             serviceResponse.Value = _mapper.Map<GetCowDto>(cow);
             return serviceResponse;
         }
 
-        public async Task<Response<GetCowDto>> UpdateCow(UpdateCowDto updatedCow)
+        public async Task<ServiceResponse<GetCowDto>> UpdateCow(UpdateCowDto updatedCow)
         {
-            var serviceResponse = new Response<GetCowDto>();
+            var serviceResponse = new ServiceResponse<GetCowDto>();
 
             try
             {

@@ -22,6 +22,8 @@ builder.Services.AddScoped<IMilkProductionService, MilkProductionService>(); // 
 
 builder.Services.AddScoped<ICowRepository, CowRepository>(); // Register the repository
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,6 +1,6 @@
 ﻿namespace FarmInfo.Models
 {
-    public class Response<T>
+    public class ServiceResponse<T>
     {
         public T? Value { get; set; }
         public bool Success { get; set; } = true;
