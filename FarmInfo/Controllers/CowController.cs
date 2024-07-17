@@ -29,12 +29,12 @@ namespace FarmInfo.Controllers
         }
         [HttpPost]
 
-        public async Task<ActionResult<ServiceResponse<List<GetCowDto>>>> AddCharacter(AddCowDto newCow)
+        public async Task<ActionResult<ServiceResponse<List<GetCowDto>>>> Add(AddCowDto newCow)
         {
             return Ok(await _cowService.AddCow(newCow));
         }
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<List<GetCowDto>>>> UpdateCharacter(UpdateCowDto updatedCow)
+        public async Task<ActionResult<ServiceResponse<List<GetCowDto>>>> Update(UpdateCowDto updatedCow)
         {
             var response = await _cowService.UpdateCow(updatedCow);
             if (response.Value == null)
@@ -46,7 +46,7 @@ namespace FarmInfo.Controllers
 
         [HttpDelete]
 
-        public async Task<ActionResult<ServiceResponse<GetCowDto>>> DeleteCharacter(int id)
+        public async Task<ActionResult<ServiceResponse<GetCowDto>>> Delete(int id)
         {
             var response = await _cowService.DeleteCow(id);
             if (response.Value == null)
