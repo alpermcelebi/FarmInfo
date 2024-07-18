@@ -45,7 +45,7 @@ namespace FarmInfo.Controllers
         public async Task<ActionResult<Response<List<GetHealthRecordDto>>>> Update(int cowId, UpdateHealthRecordDto updatedHealth)
         {
             var response = await _healthService.UpdateHealthRecord(updatedHealth, cowId);
-            if (response.Value == null)
+            if (response.Success == false)
             {
                 return NotFound(response);
             }
@@ -57,7 +57,7 @@ namespace FarmInfo.Controllers
         public async Task<ActionResult<Response<List<GetHealthRecordDto>>>> Delete(int cowId, int recordId)
         {
             var response = await _healthService.DeleteHealthRecord(new GetHealthRecordDto { Id = recordId }, cowId);
-            if (response.Value == null)
+            if (response.Success == false)
             {
                 return NotFound(response);
             }

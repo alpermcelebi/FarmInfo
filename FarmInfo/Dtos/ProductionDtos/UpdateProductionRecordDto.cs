@@ -2,7 +2,7 @@
 {
     public class UpdateProductionRecordDto
     {
-        public int CowId { get; set; }
+        public int Id { get; set; }
         public float Quantity { get; set; }
         public DateTime Date { get; set; }
     }

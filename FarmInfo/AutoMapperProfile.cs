@@ -15,10 +15,12 @@ namespace FarmInfo
 
             CreateMap<AddHealthRecordDto, HealthRecord>();
             CreateMap<HealthRecord, GetHealthRecordDto>();
+            CreateMap<GetHealthRecordDto, HealthRecord>();
             CreateMap<UpdateHealthRecordDto, HealthRecord>();
 
             CreateMap<AddProductionRecordDto, MilkProductionRecord>();
             CreateMap<MilkProductionRecord, GetProductionRecordDto>();
+            CreateMap<GetProductionRecordDto, MilkProductionRecord>();
             CreateMap<UpdateProductionRecordDto, MilkProductionRecord>();
         }
     }

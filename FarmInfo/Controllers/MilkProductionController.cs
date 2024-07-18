@@ -1,4 +1,5 @@
 ﻿using Azure;
+using FarmInfo.Dtos.HealthRecordDtos;
 using FarmInfo.Dtos.ProductionDtos;
 using FarmInfo.Services.MilkProductionService;
 using Microsoft.AspNetCore.Mvc;
@@ -53,10 +54,10 @@ namespace FarmInfo.Controllers
         }
 
         // Delete a milk production record of a specific cow
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Response<List<GetProductionRecordDto>>>> Delete(GetProductionRecordDto productionRecord, int id)
+        [HttpDelete("{cowId}/{recordId}")]
+        public async Task<ActionResult<Response<List<GetProductionRecordDto>>>> Delete(int cowId, int recordId)
         {
-            var response = await _milkProductionService.DeleteMilkProductionRecord(productionRecord, id);
+            var response = await _milkProductionService.DeleteMilkProductionRecord(new GetProductionRecordDto { Id = recordId }, cowId);
             if (response.Value == null)
             {
                 return NotFound(response);

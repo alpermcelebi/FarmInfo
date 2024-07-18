@@ -50,7 +50,7 @@ namespace FarmInfo.Services.MilkProductionService
                 var cow = await _repository.GetCowById(cowId) ?? throw new Exception($"Cow with ID '{cowId}' not found.");
 
                 var record = _mapper.Map<MilkProductionRecord>(productionRecord);
-                await _repository.DeleteProductionRecord(record, cowId);
+                if (await _repository.DeleteProductionRecord(record, cowId) == false) throw new Exception($"Record with ID '{productionRecord.Id}' not found.");
 
                 var productionRecords = await _repository.GetProductionRecords(cowId);
                 sServiceResponse.Value = productionRecords.Select(r => _mapper.Map<GetProductionRecordDto>(r)).ToList();
@@ -91,7 +91,7 @@ namespace FarmInfo.Services.MilkProductionService
                 var cow = await _repository.GetCowById(cowId) ?? throw new Exception($"Cow with ID '{cowId}' not found.");
 
                 var productionRecord = _mapper.Map<MilkProductionRecord>(updatedRecord);
-                await _repository.UpdateProductionRecord(productionRecord, cowId);
+                if (await _repository.UpdateProductionRecord(productionRecord, cowId) == false) throw new Exception($"Production with ID '{productionRecord.Id}' not found.");
 
                 var updatedRecordDto = _mapper.Map<GetProductionRecordDto>(productionRecord);
 

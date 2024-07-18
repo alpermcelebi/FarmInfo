@@ -48,7 +48,7 @@ namespace FarmInfo.Services.HealthService
                 var cow = await _repository.GetCowById(cowId) ?? throw new Exception($"Cow with ID '{cowId}' not found.");
 
                 var record = _mapper.Map<HealthRecord>(healthRecord);
-                await _repository.DeleteHealthRecord(record, cowId);
+                if (await _repository.DeleteHealthRecord(record, cowId) == false) throw new Exception($"Record with ID '{healthRecord.Id}' not found.");
 
                 var healthRecords = await _repository.GetHealthRecords(cowId);
                 serviceResponse.Value = healthRecords.Select(r => _mapper.Map<GetHealthRecordDto>(r)).ToList();
@@ -77,7 +77,7 @@ namespace FarmInfo.Services.HealthService
             {
                 var cow = await _repository.GetCowById(cowId) ?? throw new Exception($"Cow with ID '{cowId}' not found.");
                 var updatedRecord = _mapper.Map<HealthRecord>(updatedHealthRecord);
-                await _repository.UpdateHealthRecord(updatedRecord, cowId);
+                if (await _repository.UpdateHealthRecord(updatedRecord, cowId) == false) throw new Exception($"Health record not found with '{updatedRecord.Id}'.");
 
                 var healthRecords = await _repository.GetHealthRecords(cowId);
                 serviceResponse.Value = healthRecords.Select(r => _mapper.Map<GetHealthRecordDto>(r)).ToList();

@@ -84,7 +84,7 @@ namespace FarmInfo.Repositories.CowRepo
             
         }
 
-        public async Task UpdateHealthRecord(HealthRecord updatedHealthRecord, int cowId)
+        public async Task<bool> UpdateHealthRecord(HealthRecord updatedHealthRecord, int cowId)
         {
             var cow = await _context.Cows.Include(c => c.HealthRecords).FirstOrDefaultAsync(c => c.Id == cowId);
             if (cow != null)
@@ -97,22 +97,29 @@ namespace FarmInfo.Repositories.CowRepo
                     healthRecord.Date = updatedHealthRecord.Date;
                     _context.HealthRecords.Update(healthRecord);
                     await _context.SaveChangesAsync();
+                    return true;
                 }
+                return false;
             }
+            return false;
             
         }
 
-        public async Task<List<HealthRecord>> DeleteHealthRecord(HealthRecord healthRecord, int cowId)
+        public async Task<bool> DeleteHealthRecord(HealthRecord healthRecord, int cowId)
         {
             var cow = await _context.Cows.Include(c => c.HealthRecords).FirstOrDefaultAsync(c => c.Id == cowId);
-            if (cow != null) {
-                if (healthRecord != null)
+            if (cow != null)
+            {
+                var deletedRecord = cow.HealthRecords!.FirstOrDefault(hr => hr.Id == healthRecord.Id);
+                if (deletedRecord != null)
                 {
-                    cow.HealthRecords!.Remove(healthRecord);
+                    cow.HealthRecords!.Remove(deletedRecord);
                     await _context.SaveChangesAsync();
+                    return true;
                 }
+                return false;
             }
-            return cow.HealthRecords;
+            return false;
         }
 
         
@@ -134,7 +141,7 @@ namespace FarmInfo.Repositories.CowRepo
             }
         }
 
-        public async Task UpdateProductionRecord(MilkProductionRecord updatedProductionRecord, int cowId)
+        public async Task<bool> UpdateProductionRecord(MilkProductionRecord updatedProductionRecord, int cowId)
         {
             var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId);
             if (cow != null)
@@ -147,22 +154,28 @@ namespace FarmInfo.Repositories.CowRepo
 
                     _context.MilkProductionRecords.Update(productionRecord);
                     await _context.SaveChangesAsync();
+                    return true;
                 }
+                return false;
             }
+            return false;
         }
 
-        public async Task<List<MilkProductionRecord>> DeleteProductionRecord(MilkProductionRecord productionRecord, int cowId)
+        public async Task<bool> DeleteProductionRecord(MilkProductionRecord productionRecord, int cowId)
         {
             var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId);
             if (cow != null)
             {
-                if (productionRecord != null)
+                var deletedRecord = cow.MilkProductionRecords!.FirstOrDefault(hr => hr.Id == productionRecord.Id);
+                if (deletedRecord != null)
                 {
-                    cow.MilkProductionRecords!.Remove(productionRecord);
+                    cow.MilkProductionRecords!.Remove(deletedRecord);
                     await _context.SaveChangesAsync();
+                    return true;
                 }
+                return false;
             }
-            return cow.MilkProductionRecords;
+            return false;
         }
     }
 }
