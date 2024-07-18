@@ -7,11 +7,11 @@ namespace FarmInfo.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class HealthController : ControllerBase
+    public class HealthRecordsController : ControllerBase
     {
         private readonly IHealthService _healthService;
 
-        public HealthController(IHealthService healthService)
+        public HealthRecordsController(IHealthService healthService)
         {
             _healthService = healthService;
         }

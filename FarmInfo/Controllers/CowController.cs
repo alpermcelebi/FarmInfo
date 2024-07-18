@@ -9,11 +9,11 @@ namespace FarmInfo.Controllers
     
     [ApiController]
     [Route("api/[controller]")]
-    public class CowController : ControllerBase
+    public class CowsController : ControllerBase
     {
         private readonly ICowService _cowService;
 
-        public CowController(ICowService cowService)
+        public CowsController(ICowService cowService)
         {
             _cowService = cowService;
         }

@@ -7,11 +7,11 @@ namespace FarmInfo.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class MilkProductionController : ControllerBase
+    public class MilkProductionRecordsController : ControllerBase
     {
         private readonly IMilkProductionService _milkProductionService;
 
-        public MilkProductionController(IMilkProductionService milkProductionService)
+        public MilkProductionRecordsController(IMilkProductionService milkProductionService)
         {
             _milkProductionService = milkProductionService;
         }
@@ -53,10 +53,10 @@ namespace FarmInfo.Controllers
         }
 
         // Delete a milk production record of a specific cow
-        [HttpDelete("{cowId}/{recordId}")]
-        public async Task<ActionResult<Response<List<GetProductionRecordDto>>>> Delete(GetProductionRecordDto productionRecord, int recordId)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Response<List<GetProductionRecordDto>>>> Delete(GetProductionRecordDto productionRecord, int id)
         {
-            var response = await _milkProductionService.DeleteMilkProductionRecord(productionRecord, recordId);
+            var response = await _milkProductionService.DeleteMilkProductionRecord(productionRecord, id);
             if (response.Value == null)
             {
                 return NotFound(response);
