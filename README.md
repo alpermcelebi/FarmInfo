@@ -1,1 +1,1 @@
-This is a simple CRUD WEB API project for the farmers who want to check their cows with records including information about milk production and health. (C# .NET 8.0)
+This is a simple CRUD WEB API project for the farmers who want to check their cows with records including information about milk production and health. Every farmer(user) has a list of cows, every cow object contains two lists for their milk production and health condition records. (C# .NET 8.0)
