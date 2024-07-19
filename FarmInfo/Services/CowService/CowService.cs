@@ -2,6 +2,7 @@
 using FarmInfo.Dtos.CowDtos;
 using FarmInfo.Models;
 using FarmInfo.Repositories.CowRepo;
+using System.Security.Claims;
 
 namespace FarmInfo.Services.CowService
 {
@@ -9,20 +10,25 @@ namespace FarmInfo.Services.CowService
     {
         private readonly ICowRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CowService(ICowRepository repository, IMapper mapper)
+        public CowService(ICowRepository repository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
+
+        private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         public async Task<ServiceResponse<List<GetCowDto>>> AddCow(AddCowDto newCow)
         {
             var serviceResponse = new ServiceResponse<List<GetCowDto>>();
             var cow = _mapper.Map<Cow>(newCow);
+            
 
             await _repository.AddCow(cow);
             var cows = await _repository.GetAllCows();
-            serviceResponse.Value = cows.Select(c => _mapper.Map<GetCowDto>(c)).ToList();
+            serviceResponse.Value = cows.Where(c => c.Farmer!.Id == GetUserId()).Select(c => _mapper.Map<GetCowDto>(c)).ToList();
             return serviceResponse;
 
         }
@@ -37,7 +43,7 @@ namespace FarmInfo.Services.CowService
                     throw new Exception($"Character with ID '{id}' not found.");
 
                 await _repository.DeleteCow(cow);
-                var cows = await _repository.GetAllCows();
+                var cows = await _repository.GetAllCows(GetUserId());
                 serviceResponse.Value = cows.Select(c => _mapper.Map<GetCowDto>(c)).ToList();
 
 
@@ -52,7 +58,7 @@ namespace FarmInfo.Services.CowService
         public async Task<ServiceResponse<List<GetCowDto>>> GetAllCows()
         {
             var serviceResponse = new ServiceResponse<List<GetCowDto>>();
-            var cows = await _repository.GetAllCows();
+            var cows = await _repository.GetAllCows(GetUserId());
             serviceResponse.Value = cows.Select(c => _mapper.Map<GetCowDto>(c)).ToList();
             return serviceResponse;
         }

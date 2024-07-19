@@ -2,11 +2,13 @@
 using FarmInfo.Dtos.CowDtos;
 using FarmInfo.Models;
 using FarmInfo.Services.CowService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FarmInfo.Controllers
 {
-    
+    [Authorize]   
     [ApiController]
     [Route("api/[controller]")]
     public class CowsController : ControllerBase

@@ -65,6 +65,12 @@ namespace FarmInfo.Services.HealthService
         public async Task<ServiceResponse<List<GetHealthRecordDto>>> GetHealthRecords(int cowId)
         {
             var serviceResponse = new ServiceResponse<List<GetHealthRecordDto>>();
+            if( await _repository.GetCowById(cowId) == null)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "Invalid cow ID.";
+                return serviceResponse;
+            }
             var healthRecords = await _repository.GetHealthRecords(cowId);
             serviceResponse.Value = healthRecords.Select(c => _mapper.Map<GetHealthRecordDto>(c)).ToList();
             return serviceResponse;

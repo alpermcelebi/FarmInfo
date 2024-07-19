@@ -3,6 +3,7 @@ using FarmInfo.Repositories.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace FarmInfo.Repositories.CowRepo
@@ -10,13 +11,18 @@ namespace FarmInfo.Repositories.CowRepo
     public class CowRepository : ICowRepository
     {
         private readonly DataContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CowRepository(DataContext context)
+        public CowRepository(DataContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context; // Dependency Injection
+            _httpContextAccessor = httpContextAccessor;
         }
+        private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
         public async Task AddCow(Cow cow)
         {
+            cow.Farmer = await _context.Farmers.FirstOrDefaultAsync(f => f.Id == GetUserId());
             await _context.Cows.AddAsync(cow);
             await _context.SaveChangesAsync();
 
@@ -28,6 +34,11 @@ namespace FarmInfo.Repositories.CowRepo
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<Cow>> GetAllCows(int id)
+        {
+            return await _context.Cows.Where(c => c.Farmer!.Id == id).ToListAsync();
+        }
+
         public async Task<List<Cow>> GetAllCows()
         {
             return await _context.Cows.ToListAsync();
@@ -35,7 +46,7 @@ namespace FarmInfo.Repositories.CowRepo
 
         public async Task<Cow> GetCowById(int id)
         {
-            var cow = await _context.Cows.FirstOrDefaultAsync(c => c.Id == id);
+            var cow = await _context.Cows.FirstOrDefaultAsync(c => c.Id == id && c.Farmer!.Id == GetUserId());
             return cow!;
         }
 

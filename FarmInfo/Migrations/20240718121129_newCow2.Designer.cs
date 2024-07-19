@@ -4,6 +4,7 @@ using FarmInfo.Repositories.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmInfo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240718121129_newCow2")]
+    partial class newCow2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,16 +39,11 @@ namespace FarmInfo.Migrations
                     b.Property<string>("Breed")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("FarmerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FarmerId");
 
                     b.ToTable("Cows");
                 });
@@ -124,15 +122,6 @@ namespace FarmInfo.Migrations
                     b.HasIndex("CowId");
 
                     b.ToTable("MilkProductionRecords");
-                });
-
-            modelBuilder.Entity("FarmInfo.Models.Cow", b =>
-                {
-                    b.HasOne("FarmInfo.Models.Farmer", "Farmer")
-                        .WithMany()
-                        .HasForeignKey("FarmerId");
-
-                    b.Navigation("Farmer");
                 });
 
             modelBuilder.Entity("FarmInfo.Models.HealthRecord", b =>

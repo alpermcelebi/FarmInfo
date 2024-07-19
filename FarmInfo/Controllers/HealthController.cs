@@ -1,10 +1,12 @@
 ﻿using Azure;
 using FarmInfo.Dtos.HealthRecordDtos;
 using FarmInfo.Services.HealthService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FarmInfo.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class HealthRecordsController : ControllerBase

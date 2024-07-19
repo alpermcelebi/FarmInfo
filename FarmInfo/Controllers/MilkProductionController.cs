@@ -2,10 +2,12 @@
 using FarmInfo.Dtos.HealthRecordDtos;
 using FarmInfo.Dtos.ProductionDtos;
 using FarmInfo.Services.MilkProductionService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FarmInfo.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MilkProductionRecordsController : ControllerBase

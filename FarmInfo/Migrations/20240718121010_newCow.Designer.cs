@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmInfo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240716083652_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240718121010_newCow")]
+    partial class newCow
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,6 @@ namespace FarmInfo.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Breed")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -47,6 +46,23 @@ namespace FarmInfo.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cows");
+                });
+
+            modelBuilder.Entity("FarmInfo.Models.Farmer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Farmers");
                 });
 
             modelBuilder.Entity("FarmInfo.Models.HealthRecord", b =>

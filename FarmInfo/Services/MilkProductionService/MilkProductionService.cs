@@ -3,6 +3,7 @@ using FarmInfo.Dtos.HealthRecordDtos;
 using FarmInfo.Dtos.ProductionDtos;
 using FarmInfo.Models;
 using FarmInfo.Repositories.CowRepo;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace FarmInfo.Services.MilkProductionService
@@ -66,21 +67,16 @@ namespace FarmInfo.Services.MilkProductionService
 
         public async Task<ServiceResponse<List<GetProductionRecordDto>>> GetMilkProductions(int cowId)
         {
-            var sServiceResponse = new ServiceResponse<List<GetProductionRecordDto>>();
-            try
+            var serviceResponse = new ServiceResponse<List<GetProductionRecordDto>>();
+            if (await _repository.GetCowById(cowId) == null)
             {
-                var records = await _repository.GetProductionRecords(cowId);
-                sServiceResponse.Value = records.Select(r => _mapper.Map<GetProductionRecordDto>(r)).ToList();
-
-                sServiceResponse.Message = "Milk production records retrieved successfully";
+                serviceResponse.Success = false;
+                serviceResponse.Message = "Invalid cow ID.";
+                return serviceResponse;
             }
-            catch (Exception ex)
-            {
-                sServiceResponse.Success = false;
-                sServiceResponse.Message = $"Failed to retrieve milk production records: {ex.Message}";
-            }
-
-            return sServiceResponse;
+            var productionRecords = await _repository.GetProductionRecords(cowId);
+            serviceResponse.Value = productionRecords.Select(c => _mapper.Map<GetProductionRecordDto>(c)).ToList();
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<GetProductionRecordDto>> UpdateMilkProductionRecord(UpdateProductionRecordDto updatedRecord, int cowId)

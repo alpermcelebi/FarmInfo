@@ -8,7 +8,9 @@ namespace FarmInfo.Repositories.CowRepo
         Task AddCow(Cow cow);
         Task DeleteCow(Cow cow);
         Task<Cow> GetCowById(int id);
+        Task<List<Cow>> GetAllCows(int id);
         Task<List<Cow>> GetAllCows();
+
         Task UpdateCow(Cow cow);
 
         Task<List<HealthRecord>> GetHealthRecords(int cowId);

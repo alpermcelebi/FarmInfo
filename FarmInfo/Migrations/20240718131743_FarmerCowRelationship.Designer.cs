@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmInfo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240717135643_AddCowRelationships")]
-    partial class AddCowRelationships
+    [Migration("20240718131743_FarmerCowRelationship")]
+    partial class FarmerCowRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,13 +39,43 @@ namespace FarmInfo.Migrations
                     b.Property<string>("Breed")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("FarmerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FarmerId");
+
                     b.ToTable("Cows");
+                });
+
+            modelBuilder.Entity("FarmInfo.Models.Farmer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Farmers");
                 });
 
             modelBuilder.Entity("FarmInfo.Models.HealthRecord", b =>
@@ -97,6 +127,15 @@ namespace FarmInfo.Migrations
                     b.HasIndex("CowId");
 
                     b.ToTable("MilkProductionRecords");
+                });
+
+            modelBuilder.Entity("FarmInfo.Models.Cow", b =>
+                {
+                    b.HasOne("FarmInfo.Models.Farmer", "Farmer")
+                        .WithMany()
+                        .HasForeignKey("FarmerId");
+
+                    b.Navigation("Farmer");
                 });
 
             modelBuilder.Entity("FarmInfo.Models.HealthRecord", b =>

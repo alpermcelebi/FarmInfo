@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FarmInfo.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class newCow : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,12 +18,25 @@ namespace FarmInfo.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Breed = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Breed = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Age = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cows", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Farmers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Farmers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,6 +96,9 @@ namespace FarmInfo.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Farmers");
+
             migrationBuilder.DropTable(
                 name: "HealthRecords");
 
