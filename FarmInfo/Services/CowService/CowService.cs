@@ -28,7 +28,10 @@ namespace FarmInfo.Services.CowService
 
             await _repository.AddCow(cow);
             var cows = await _repository.GetAllCows();
-            serviceResponse.Value = cows.Where(c => c.Farmer!.Id == GetUserId()).Select(c => _mapper.Map<GetCowDto>(c)).ToList();
+            serviceResponse.Value = cows
+                    .Where(c => c.Farmer != null && c.Farmer.Id == GetUserId())
+                    .Select(c => _mapper.Map<GetCowDto>(c))
+                    .ToList();
             return serviceResponse;
 
         }
@@ -40,7 +43,7 @@ namespace FarmInfo.Services.CowService
             {
                 var cow = await _repository.GetCowById(id);
                 if (cow == null)
-                    throw new Exception($"Character with ID '{id}' not found.");
+                    throw new Exception($"Cow with ID '{id}' not found.");
 
                 await _repository.DeleteCow(cow);
                 var cows = await _repository.GetAllCows(GetUserId());
@@ -67,7 +70,15 @@ namespace FarmInfo.Services.CowService
         {
             var serviceResponse = new ServiceResponse<GetCowDto>();    
             var cow = await _repository.GetCowById(id);
+            if(cow is null)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"Cow with ID:{id} not found.";
+                return serviceResponse;
+
+            }
             serviceResponse.Value = _mapper.Map<GetCowDto>(cow);
+            serviceResponse.Message = "Cow data fetched successfully.";
             return serviceResponse;
         }
 
@@ -78,8 +89,7 @@ namespace FarmInfo.Services.CowService
             try
             {
                 var cow = await _repository.GetCowById(updatedCow.Id);
-                if (cow == null) throw new Exception($"Character with Id '{updatedCow.Id}' not found.");
-
+                if (cow == null) throw new Exception($"Cow with Id '{updatedCow.Id}' not found.");
                 cow.Name = updatedCow.Name;
                 cow.Breed = updatedCow.Breed;
                 cow.Age = updatedCow.Age;
@@ -90,10 +100,10 @@ namespace FarmInfo.Services.CowService
                 
 
             }
-            catch
+            catch(Exception ex) 
             {
                 serviceResponse.Success = false;
-                serviceResponse.Message = string.Empty;
+                serviceResponse.Message = ex.Message;
             }
             return serviceResponse;
         }

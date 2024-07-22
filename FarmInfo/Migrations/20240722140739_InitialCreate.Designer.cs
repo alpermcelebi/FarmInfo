@@ -4,6 +4,7 @@ using FarmInfo.Repositories.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmInfo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240722140739_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,18 +86,18 @@ namespace FarmInfo.Migrations
                     b.Property<int>("Condition")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CowId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CurrentTreatment")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("cowId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CowId");
+                    b.HasIndex("cowId");
 
                     b.ToTable("HealthRecords");
                 });
@@ -107,7 +110,7 @@ namespace FarmInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CowId")
+                    b.Property<int>("CowId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
@@ -136,14 +139,18 @@ namespace FarmInfo.Migrations
                 {
                     b.HasOne("FarmInfo.Models.Cow", null)
                         .WithMany("HealthRecords")
-                        .HasForeignKey("CowId");
+                        .HasForeignKey("cowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FarmInfo.Models.MilkProductionRecord", b =>
                 {
                     b.HasOne("FarmInfo.Models.Cow", null)
                         .WithMany("MilkProductionRecords")
-                        .HasForeignKey("CowId");
+                        .HasForeignKey("CowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FarmInfo.Models.Cow", b =>

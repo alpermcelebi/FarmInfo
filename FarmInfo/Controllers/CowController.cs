@@ -24,18 +24,20 @@ namespace FarmInfo.Controllers
         {
             return Ok(await _cowService.GetAllCows());
         }
-        [HttpGet("{id}")]
+        [HttpGet("GetSingleCow{id}")]
         public async Task<ActionResult<ServiceResponse<GetCowDto>>> GetSingle(int id)
         {
-            return Ok(await _cowService.GetCowById(id));
+            var returnResponse = await _cowService.GetCowById(id);
+            if (returnResponse.Success == false) return BadRequest(returnResponse);
+            return Ok(returnResponse);
         }
-        [HttpPost]
+        [HttpPost("CreateCow")]
 
         public async Task<ActionResult<ServiceResponse<List<GetCowDto>>>> Add(AddCowDto newCow)
         {
             return Ok(await _cowService.AddCow(newCow));
         }
-        [HttpPut]
+        [HttpPut("UpdateCow")]
         public async Task<ActionResult<ServiceResponse<List<GetCowDto>>>> Update(UpdateCowDto updatedCow)
         {
             var response = await _cowService.UpdateCow(updatedCow);
@@ -46,7 +48,7 @@ namespace FarmInfo.Controllers
             return Ok(response);
         }
 
-        [HttpDelete]
+        [HttpDelete("DeleteCow")]
 
         public async Task<ActionResult<ServiceResponse<GetCowDto>>> Delete(int id)
         {

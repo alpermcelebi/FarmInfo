@@ -2,6 +2,7 @@
 using FarmInfo.Dtos.HealthRecordDtos;
 using FarmInfo.Models;
 using FarmInfo.Repositories.CowRepo;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace FarmInfo.Services.HealthService
 {
@@ -82,11 +83,17 @@ namespace FarmInfo.Services.HealthService
             try
             {
                 var cow = await _repository.GetCowById(cowId) ?? throw new Exception($"Cow with ID '{cowId}' not found.");
+
                 var updatedRecord = _mapper.Map<HealthRecord>(updatedHealthRecord);
                 if (await _repository.UpdateHealthRecord(updatedRecord, cowId) == false) throw new Exception($"Health record not found with '{updatedRecord.Id}'.");
-
+                
+                var healthRecord = cow.HealthRecords!.FirstOrDefault(hr => hr.Id == updatedHealthRecord.Id);
+                healthRecord!.Condition = updatedRecord.Condition;
+                healthRecord!.CurrentTreatment = updatedRecord.CurrentTreatment;
+                healthRecord!.Date = updatedRecord.Date;
                 var healthRecords = await _repository.GetHealthRecords(cowId);
                 serviceResponse.Value = healthRecords.Select(r => _mapper.Map<GetHealthRecordDto>(r)).ToList();
+                serviceResponse.Message = "Record has been updated successfully.";
             }
             catch (Exception ex)
             {

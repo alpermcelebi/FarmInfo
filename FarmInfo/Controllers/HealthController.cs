@@ -19,7 +19,7 @@ namespace FarmInfo.Controllers
         }
 
         // Get all health records for a specific cow
-        [HttpGet("{cowId}")]
+        [HttpGet("GetHealthRecords {cowId}")]
         public async Task<ActionResult<Response<List<GetHealthRecordDto>>>> Get(int cowId)
         {
             var response = await _healthService.GetHealthRecords(cowId);
@@ -31,7 +31,7 @@ namespace FarmInfo.Controllers
         }
 
         // Add a new health record to a specific cow
-        [HttpPost("{cowId}")]
+        [HttpPost("CreateHealthRecord {cowId}")]
         public async Task<ActionResult<Response<List<GetHealthRecordDto>>>> Add(int cowId, AddHealthRecordDto newHealth)
         {
             var response = await _healthService.AddHealthRecord(newHealth, cowId);
@@ -43,7 +43,7 @@ namespace FarmInfo.Controllers
         }
 
         // Update a health record of a specific cow
-        [HttpPut("{cowId}")]
+        [HttpPut("UpdateHealthRecord {cowId}")]
         public async Task<ActionResult<Response<List<GetHealthRecordDto>>>> Update(int cowId, UpdateHealthRecordDto updatedHealth)
         {
             var response = await _healthService.UpdateHealthRecord(updatedHealth, cowId);
@@ -55,7 +55,7 @@ namespace FarmInfo.Controllers
         }
 
         // Delete a health record of a specific cow
-        [HttpDelete("{cowId}/{recordId}")]
+        [HttpDelete("DeleteHealthRecord/{cowId}/{recordId}")]
         public async Task<ActionResult<Response<List<GetHealthRecordDto>>>> Delete(int cowId, int recordId)
         {
             var response = await _healthService.DeleteHealthRecord(new GetHealthRecordDto { Id = recordId }, cowId);

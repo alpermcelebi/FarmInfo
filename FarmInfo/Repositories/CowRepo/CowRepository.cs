@@ -103,9 +103,6 @@ namespace FarmInfo.Repositories.CowRepo
                 var healthRecord = cow.HealthRecords!.FirstOrDefault(hr => hr.Id == updatedHealthRecord.Id);
                 if (healthRecord != null)
                 {
-                    healthRecord.Condition = updatedHealthRecord.Condition;
-                    healthRecord.CurrentTreatment = updatedHealthRecord.CurrentTreatment;
-                    healthRecord.Date = updatedHealthRecord.Date;
                     _context.HealthRecords.Update(healthRecord);
                     await _context.SaveChangesAsync();
                     return true;
@@ -121,15 +118,23 @@ namespace FarmInfo.Repositories.CowRepo
             var cow = await _context.Cows.Include(c => c.HealthRecords).FirstOrDefaultAsync(c => c.Id == cowId && c.Farmer!.Id == GetUserId());
             if (cow != null)
             {
-                var deletedRecord = cow.HealthRecords!.FirstOrDefault(hr => hr.Id == healthRecord.Id);
-                if (deletedRecord != null)
+                try
                 {
-                    cow.HealthRecords!.Remove(deletedRecord);
-                    await _context.SaveChangesAsync();
-                    return true;
+                    var deletedRecord = cow.HealthRecords!.FirstOrDefault(hr => hr.Id == healthRecord.Id);
+                    if (deletedRecord != null)
+                    {
+                        cow.HealthRecords!.Remove(deletedRecord);
+                        await _context.SaveChangesAsync();
+                        return true;
+                    }
+                    return false;
+
                 }
-                return false;
-            }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }            }
             return false;
         }
 

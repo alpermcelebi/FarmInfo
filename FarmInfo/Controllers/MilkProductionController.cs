@@ -20,7 +20,7 @@ namespace FarmInfo.Controllers
         }
 
         // Get all milk production records for a specific cow
-        [HttpGet("{cowId}")]
+        [HttpGet("GetMilkProductionRecords {cowId}")]
         public async Task<ActionResult<Response<List<GetProductionRecordDto>>>> Get(int cowId)
         {
             var response = await _milkProductionService.GetMilkProductions(cowId);
@@ -32,7 +32,7 @@ namespace FarmInfo.Controllers
         }
 
         // Add a new milk production record to a specific cow
-        [HttpPost("{cowId}")]
+        [HttpPost("CreateMilkProductionRecord{cowId}")]
         public async Task<ActionResult<Response<List<GetProductionRecordDto>>>> Add(int cowId, AddProductionRecordDto newRecord)
         {
             var response = await _milkProductionService.AddMilkProductionRecord(newRecord, cowId);
@@ -44,11 +44,11 @@ namespace FarmInfo.Controllers
         }
 
         // Update a milk production record of a specific cow
-        [HttpPut("{cowId}")]
+        [HttpPut("UpdateMilkProductionRecord {cowId}")]
         public async Task<ActionResult<Response<List<GetProductionRecordDto>>>> Update(int cowId, UpdateProductionRecordDto updatedRecord)
         {
             var response = await _milkProductionService.UpdateMilkProductionRecord(updatedRecord, cowId);
-            if (response.Value == null)
+            if (response.Success == false)
             {
                 return NotFound(response);
             }
@@ -56,7 +56,7 @@ namespace FarmInfo.Controllers
         }
 
         // Delete a milk production record of a specific cow
-        [HttpDelete("{cowId}/{recordId}")]
+        [HttpDelete("DeleteMilkProductionRecord {cowId}/{recordId}")]
         public async Task<ActionResult<Response<List<GetProductionRecordDto>>>> Delete(int cowId, int recordId)
         {
             var response = await _milkProductionService.DeleteMilkProductionRecord(new GetProductionRecordDto { Id = recordId }, cowId);
