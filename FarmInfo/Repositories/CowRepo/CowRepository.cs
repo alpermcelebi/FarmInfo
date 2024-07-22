@@ -76,7 +76,7 @@ namespace FarmInfo.Repositories.CowRepo
         // health record operations below
         public async Task<List<HealthRecord>> GetHealthRecords(int cowId)
         {
-            var cow = await _context.Cows.Include(c => c.HealthRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            var cow = await _context.Cows.Include(c => c.HealthRecords).FirstOrDefaultAsync(c => c.Id == cowId && c.Farmer!.Id == GetUserId());
             var healthRecords = cow!.HealthRecords;
             return cow?.HealthRecords ?? new List<HealthRecord>();
 
@@ -84,7 +84,7 @@ namespace FarmInfo.Repositories.CowRepo
 
         public async Task AddHealthRecord(HealthRecord newHealthRecord, int cowId)
         {
-            var cow = await _context.Cows.Include(c => c.HealthRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            var cow = await _context.Cows.Include(c => c.HealthRecords).FirstOrDefaultAsync(c => c.Id == cowId && c.Farmer!.Id == GetUserId());
             if (cow != null)
             {
                 cow.HealthRecords!.Add(newHealthRecord);
@@ -97,7 +97,7 @@ namespace FarmInfo.Repositories.CowRepo
 
         public async Task<bool> UpdateHealthRecord(HealthRecord updatedHealthRecord, int cowId)
         {
-            var cow = await _context.Cows.Include(c => c.HealthRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            var cow = await _context.Cows.Include(c => c.HealthRecords).FirstOrDefaultAsync(c => c.Id == cowId && c.Farmer!.Id == GetUserId());
             if (cow != null)
             {
                 var healthRecord = cow.HealthRecords!.FirstOrDefault(hr => hr.Id == updatedHealthRecord.Id);
@@ -118,7 +118,7 @@ namespace FarmInfo.Repositories.CowRepo
 
         public async Task<bool> DeleteHealthRecord(HealthRecord healthRecord, int cowId)
         {
-            var cow = await _context.Cows.Include(c => c.HealthRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            var cow = await _context.Cows.Include(c => c.HealthRecords).FirstOrDefaultAsync(c => c.Id == cowId && c.Farmer!.Id == GetUserId());
             if (cow != null)
             {
                 var deletedRecord = cow.HealthRecords!.FirstOrDefault(hr => hr.Id == healthRecord.Id);
@@ -136,14 +136,14 @@ namespace FarmInfo.Repositories.CowRepo
         
         public async Task<List<MilkProductionRecord>> GetProductionRecords(int cowId)
         {
-            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId && c.Farmer!.Id == GetUserId());
             var healthRecords = cow!.HealthRecords;
             return cow?.MilkProductionRecords ?? new List<MilkProductionRecord>();
         }
 
         public async Task AddProductionRecord(MilkProductionRecord productionRecord, int cowId)
         {
-            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId && c.Farmer!.Id == GetUserId());
             if (cow != null)
             {
                 cow.MilkProductionRecords!.Add(productionRecord);
@@ -154,7 +154,7 @@ namespace FarmInfo.Repositories.CowRepo
 
         public async Task<bool> UpdateProductionRecord(MilkProductionRecord updatedProductionRecord, int cowId)
         {
-            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId && c.Farmer!.Id == GetUserId());
             if (cow != null)
             {
                 var productionRecord = cow.MilkProductionRecords!.FirstOrDefault(hr => hr.Id == updatedProductionRecord.Id);
@@ -174,7 +174,7 @@ namespace FarmInfo.Repositories.CowRepo
 
         public async Task<bool> DeleteProductionRecord(MilkProductionRecord productionRecord, int cowId)
         {
-            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId);
+            var cow = await _context.Cows.Include(c => c.MilkProductionRecords).FirstOrDefaultAsync(c => c.Id == cowId && c.Farmer!.Id == GetUserId());
             if (cow != null)
             {
                 var deletedRecord = cow.MilkProductionRecords!.FirstOrDefault(hr => hr.Id == productionRecord.Id);
